@@ -3753,3 +3753,117 @@ img[loading="lazy"]:not([style]) {
   .admin-payments .panel-lux,
   .admin-payments .panel-lux:hover { transform: none; transition: none; }
 }
+
+/* ── Admin dashboard only: "caddy" 3D glass cards ─────────────────────
+   Inspired by the Uiverse 3D glass card: perspective tilt on hover,
+   floating glass circles in the corner, and a moving gold edge light.
+   Scoped under .admin-dash-caddy so other admin pages keep their look. */
+@property --caddy-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes caddy-edge-spin {
+  to { --caddy-angle: 360deg; }
+}
+
+@keyframes caddy-orb-drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(-6px, 6px, 0) scale(1.06); }
+}
+
+.admin-dash-caddy .panel-lux {
+  transform-style: preserve-3d;
+  border-radius: 1.4rem;
+  border-color: oklch(from var(--color-lux) l c h / .22);
+  background:
+    linear-gradient(155deg, oklch(from var(--color-cream) l c h / .07), transparent 38%),
+    linear-gradient(160deg, oklch(0.284 0.027 52 / .9), oklch(0.196 0.02 46 / .93));
+  backdrop-filter: blur(16px) saturate(1.15);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  box-shadow:
+    inset 0 1px 0 oklch(1 0 0 / .1),
+    inset 0 -20px 44px -34px oklch(from var(--color-lux) l c h / .5),
+    0 24px 48px -26px oklch(0.09 0.02 45 / .9),
+    0 5px 0 -1px oklch(0.14 0.017 44 / .85);
+  transition:
+    transform .5s cubic-bezier(.34, 1.3, .64, 1),
+    box-shadow .5s ease,
+    border-color .5s ease;
+}
+
+/* Floating glass circles, top-right corner (Uiverse logo cluster) */
+.admin-dash-caddy .panel-lux::before {
+  content: "";
+  position: absolute;
+  top: -34px;
+  right: -34px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 68% 32%, oklch(1 0 0 / .16) 0 14%, transparent 15%),
+    radial-gradient(circle at 60% 40%, oklch(from var(--color-lux) l c h / .2) 0 26%, transparent 27%),
+    radial-gradient(circle at 50% 50%, oklch(1 0 0 / .07) 0 40%, transparent 41%),
+    radial-gradient(circle at 50% 50%, oklch(from var(--color-lux) l c h / .1) 0 55%, transparent 56%);
+  filter: blur(.4px);
+  opacity: .8;
+  transition: opacity .5s ease, transform .5s cubic-bezier(.34, 1.3, .64, 1);
+  animation: caddy-orb-drift 9s ease-in-out infinite;
+}
+
+/* Moving gold edge light travelling around the card border */
+.admin-dash-caddy .panel-lux::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--caddy-angle),
+    transparent 0%,
+    oklch(from var(--color-lux) l c h / .05) 6%,
+    oklch(0.96 0.09 95 / .85) 12%,
+    oklch(from var(--color-lux) l c h / .05) 18%,
+    transparent 26%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+  animation: caddy-edge-spin 7s linear infinite;
+}
+
+@media (hover: hover) {
+  .admin-dash-caddy .panel-lux:hover {
+    transform: perspective(1000px) rotate3d(1, -1, 0, 7deg) translateY(-5px);
+    border-color: oklch(from var(--color-lux) l c h / .5);
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / .16),
+      inset 0 -22px 48px -32px oklch(from var(--color-lux) l c h / .7),
+      0 44px 76px -30px oklch(0.09 0.02 45 / .95),
+      0 9px 0 -1px oklch(0.14 0.017 44 / .9);
+  }
+  .admin-dash-caddy .panel-lux:hover::before {
+    opacity: 1;
+    transform: translate3d(-8px, 8px, 0) scale(1.12);
+  }
+}
+
+/* Stat cards get a slightly stronger glass tint so numbers pop */
+.admin-dash-caddy .card-3d {
+  background-color: oklch(0.24 0.024 50 / .55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-dash-caddy .panel-lux,
+  .admin-dash-caddy .panel-lux::before,
+  .admin-dash-caddy .panel-lux::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .admin-dash-caddy .panel-lux:hover { transform: none; }
+}
