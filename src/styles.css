@@ -3847,7 +3847,6 @@ img[loading="lazy"]:not([style]) {
     linear-gradient(155deg, oklch(from var(--color-cream) l c h / .07), transparent 38%),
     linear-gradient(160deg, oklch(0.284 0.027 52 / .9), oklch(0.196 0.02 46 / .93));
   backdrop-filter: blur(16px) saturate(1.15);
-  -webkit-backdrop-filter: blur(16px) saturate(1.15);
   box-shadow:
     inset 0 1px 0 oklch(1 0 0 / .1),
     inset 0 -20px 44px -34px oklch(from var(--color-lux) l c h / .5),
