@@ -49,6 +49,10 @@ export const Route = createFileRoute("/profile")({
   // Client-rendered + guarded before render, so the page never flashes before
   // an unauthenticated visitor is redirected.
   ssr: false,
+  validateSearch: (search: Record<string, unknown>): { tab?: "home" | "orders" | "saved" | "account" | "live" } => {
+    const t = search.tab;
+    return t === "home" || t === "orders" || t === "saved" || t === "account" || t === "live" ? { tab: t } : {};
+  },
   beforeLoad: requireRole(["customer"]),
   head: () => ({
     meta: [
@@ -100,7 +104,11 @@ function ProfilePage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [email, setEmail] = useState("");
   const [joined, setJoined] = useState<string | null>(null);
-  const [tab, setTab] = useState<TabId>("home");
+  const search = Route.useSearch();
+  const [tab, setTab] = useState<TabId>(search.tab ?? "orders");
+  useEffect(() => {
+    if (search.tab) setTab(search.tab);
+  }, [search.tab]);
   const [savedAddresses, setSavedAddresses] = useState<Address[]>([]);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 

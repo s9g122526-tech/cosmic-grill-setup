@@ -38,6 +38,7 @@ export function ActiveOrderTab() {
 
   const hidden =
     pathname.startsWith("/track/") ||
+    pathname.startsWith("/profile") ||
     pathname.startsWith("/admin") ||
     pathname.startsWith("/rider") ||
     pathname === "/cart" ||
@@ -57,8 +58,8 @@ export function ActiveOrderTab() {
     >
       <div>
         <Link
-          to="/track/$code"
-          params={{ code: order.order_code }}
+          to="/profile"
+          search={{ tab: "live" }}
           aria-label={`Track order ${order.order_code}: ${label}`}
           className="active-order-tab flex min-h-20 w-[4.75rem] items-center overflow-hidden rounded-l-2xl border-2 border-r-0 border-cream/70 bg-charcoal text-cream shadow-[0_16px_34px_rgba(20,14,10,0.35)] transition-[width,transform] duration-300 hover:w-[17.5rem] focus-visible:w-[17.5rem] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-gold/55 sm:w-[5.25rem]"
         >
