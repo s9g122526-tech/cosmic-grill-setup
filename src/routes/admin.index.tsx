@@ -129,7 +129,7 @@ function Dashboard() {
   const { connected: waConnected, phone: waPhone } = useWaStatus();
 
   return (
-    <div className="space-y-6">
+    <div className="admin-dash-caddy space-y-6">
       <SectionTitle
         eyebrow={`${currentRestaurant} · Live Operations`}
         title="Dashboard"
