@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { BadgeCheck, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowUpRight, BadgeCheck, Bell, ShieldCheck, Wallet } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
@@ -56,6 +56,21 @@ const tooltipStyle = {
   fontWeight: 700,
 };
 
+/** Decorative Uiverse-style corner tab — pure presentation, no behavior. */
+function CaddyCorner() {
+  return (
+    <div className="caddy-corner" aria-hidden="true">
+      <span className="caddy-corner-btn">
+        <Bell className="h-4 w-4" />
+        <i className="caddy-corner-dot" />
+      </span>
+      <span className="caddy-corner-btn">
+        <ArrowUpRight className="h-4 w-4" />
+      </span>
+    </div>
+  );
+}
+
 function Payments() {
   const state = useAdmin();
   const stats = orderStats(state.orders);
@@ -87,6 +102,7 @@ function Payments() {
 
       <div className="grid gap-6 xl:grid-cols-3">
         <Panel title="Collected by method" className="xl:col-span-2">
+          <CaddyCorner />
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={series} margin={{ left: -10, right: 8 }}>
@@ -100,6 +116,7 @@ function Payments() {
           </div>
         </Panel>
         <Panel title="Method share" subtitle="Orders per payment method">
+          <CaddyCorner />
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -128,7 +145,7 @@ function Payments() {
         title="Ledger"
         subtitle="Verify, refund or flag any transaction"
         action={
-          <div className="flex flex-wrap gap-1.5">
+          <div className="caddy-corner-strip flex flex-wrap gap-1.5">
             {(["pending", "verified", "failed", "refunded", "all"] as (PaymentStatus | "all")[]).map((t) => (
               <button
                 key={t}
