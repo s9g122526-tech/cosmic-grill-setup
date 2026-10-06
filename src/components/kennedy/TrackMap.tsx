@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Bike, MapPin, Route as RouteIcon, Timer } from "lucide-react";
+import { Bike, Crosshair, LocateFixed, MapPin, Maximize2, Minimize2, Minus, Plus, Route as RouteIcon, Timer } from "lucide-react";
 import { toast } from "sonner";
 
 /** Kennedy Moon Grill, Narowal. */
@@ -92,6 +92,38 @@ export function TrackMap({
   const courierRef = useRef(courier);
   courierRef.current = courier;
   const riderRefs = useRef<{ marker: any; line: any } | null>(null);
+  const mapRef = useRef<any>(null);
+  const boundsRef = useRef<any>(null);
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const [full, setFull] = useState(false);
+
+  useEffect(() => {
+    const t = window.setTimeout(() => mapRef.current?.invalidateSize(), 260);
+    if (!full) return () => window.clearTimeout(t);
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setFull(false);
+    document.addEventListener("keydown", onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.clearTimeout(t);
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
+  }, [full]);
+
+  const zoom = (d: number) => mapRef.current?.setZoom(mapRef.current.getZoom() + d);
+  const fitAll = () => {
+    const m = mapRef.current;
+    if (!m) return;
+    if (boundsRef.current) m.fitBounds(boundsRef.current, { animate: true });
+    else m.setView([RESTAURANT.lat, RESTAURANT.lng], 15);
+  };
+  const followCaddy = () => {
+    const m = mapRef.current;
+    const ll = riderRefs.current?.marker?.getLatLng?.();
+    if (m && ll) m.flyTo(ll, 17, { duration: 0.8 });
+    else if (m && drop) m.flyTo([drop.lat, drop.lng], 17, { duration: 0.8 });
+  };
 
 
   useEffect(() => {
@@ -109,7 +141,7 @@ export function TrackMap({
       const L = (await import("leaflet")).default;
       if (cancelled || !ref.current) return;
 
-      const map = L.map(ref.current, { zoomControl: true }).setView(
+      const map = L.map(ref.current, { zoomControl: false, scrollWheelZoom: "center", tap: true } as any).setView(
         [RESTAURANT.lat, RESTAURANT.lng],
         15,
       );
@@ -117,6 +149,7 @@ export function TrackMap({
         maxZoom: 19,
         attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
+      mapRef.current = map;
 
       const icon = (color: string, glyph: string) =>
         L.divIcon({ className: "", html: pin(color, glyph), iconSize: [30, 38], iconAnchor: [15, 34] });
@@ -164,7 +197,8 @@ export function TrackMap({
           direction: "center",
           className: "kennedy-route-label",
         });
-        map.fitBounds(line.getBounds().pad(0.4));
+        boundsRef.current = line.getBounds().pad(0.4);
+        map.fitBounds(boundsRef.current);
       }
 
       // Externally driven courier (useOrderTracking / Django live location).
@@ -191,6 +225,7 @@ export function TrackMap({
           riderLine.setStyle({ opacity: 0 });
         }
         riderRefs.current = { marker: riderMarker, line: riderLine };
+        mapRef.current = map;
 
         cleanup = () => {
           riderRefs.current = null;
@@ -241,7 +276,9 @@ export function TrackMap({
           }
         }, 1500);
 
+        riderRefs.current = { marker: riderMarker, line: riderLine };
         cleanup = () => {
+          riderRefs.current = null;
           window.clearInterval(moveInterval);
           map.remove();
         };
@@ -273,8 +310,38 @@ export function TrackMap({
 
   return (
     <div className="space-y-3">
-      <div className="relative overflow-hidden rounded-2xl border border-lux/20">
-        <div ref={ref} className="h-64 w-full sm:h-80" />
+      <div
+        ref={shellRef}
+        className={
+          full
+            ? "caddy-map-shell fixed inset-0 z-[1000] bg-ink p-2 sm:p-4"
+            : "caddy-map-shell relative overflow-hidden rounded-2xl border border-lux/20"
+        }
+      >
+        <div
+          ref={ref}
+          className={full ? "h-full w-full overflow-hidden rounded-2xl" : "h-72 w-full sm:h-96"}
+        />
+        <div className="absolute left-3 top-1/2 z-[500] flex -translate-y-1/2 flex-col gap-1.5 rounded-2xl border border-lux/30 bg-ink/85 p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.35)] backdrop-blur">
+          <MapBtn label="Zoom in" onClick={() => zoom(1)}><Plus className="h-4 w-4" /></MapBtn>
+          <MapBtn label="Zoom out" onClick={() => zoom(-1)}><Minus className="h-4 w-4" /></MapBtn>
+          <span className="mx-1 h-px bg-lux/20" />
+          <MapBtn label="Show full route" onClick={fitAll}><Crosshair className="h-4 w-4" /></MapBtn>
+          <MapBtn label="Follow caddy" onClick={followCaddy}><LocateFixed className="h-4 w-4" /></MapBtn>
+          <span className="mx-1 h-px bg-lux/20" />
+          <MapBtn label={full ? "Exit full screen" : "Full screen map"} onClick={() => setFull((f) => !f)}>
+            {full ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </MapBtn>
+        </div>
+        {full && (
+          <button
+            type="button"
+            onClick={() => setFull(false)}
+            className="absolute bottom-6 left-1/2 z-[500] -translate-x-1/2 rounded-full border border-lux/40 bg-ink/90 px-5 py-2.5 text-[11px] font-black uppercase tracking-[0.16em] text-lux shadow-lg"
+          >
+            Close map
+          </button>
+        )}
         <span className="pointer-events-none absolute right-3 top-3 z-[500] rounded-full border border-lux/30 bg-ink/85 px-3 py-1.5 text-[11px] font-black uppercase tracking-[0.16em] text-lux">
           {externallyDriven
             ? courier
@@ -314,6 +381,20 @@ export function TrackMap({
         </p>
       )}
     </div>
+  );
+}
+
+function MapBtn({ label, onClick, children }: { label: string; onClick: () => void; children: React.ReactNode }) {
+  return (
+    <button
+      type="button"
+      aria-label={label}
+      title={label}
+      onClick={onClick}
+      className="grid h-9 w-9 place-items-center rounded-xl text-lux transition hover:bg-lux/15 hover:text-frost active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-lux/60"
+    >
+      {children}
+    </button>
   );
 }
 
