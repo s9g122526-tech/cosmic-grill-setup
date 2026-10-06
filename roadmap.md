@@ -1,4 +1,5 @@
 # Menu reference update
+- [x] Convert the ten local menu food images to high-quality WebP, reducing them from 13.68 MB to 1.09 MB while preserving transparency.
 - [x] Add an admin-only animated dot-grid background and refine dish motion with reduced-motion guards; build reports OK.
 - [ ] Verify the authenticated admin background and dish interactions visually. Blocked: external staff session unavailable; live admin redirects to sign-in.
 - [x] Refresh cart layout, reference-style payment selector, compact OTP and verified phone lock. Verified real menu-to-cart navigation and all payment choices; mocked OTP send/verify tests pass. No real OTP or order was sent.

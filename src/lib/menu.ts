@@ -1,8 +1,8 @@
-import pizzaWhite from "@/assets/pizza-white.png";
-import pulao from "@/assets/pulao.png";
-import karahi from "@/assets/karahi.jpg";
-import steak from "@/assets/steak.png";
-import skewers from "@/assets/skewers.png";
+import pizzaWhite from "@/assets/pizza-white.webp";
+import pulao from "@/assets/pulao.webp";
+import karahi from "@/assets/karahi.webp";
+import steak from "@/assets/steak.webp";
+import skewers from "@/assets/skewers.webp";
 import { api, isBackendConfigured } from "@/lib/api/client";
 import { MENU } from "@/lib/api/endpoints";
 import { currentTenantSlug } from "@/lib/tenant";
