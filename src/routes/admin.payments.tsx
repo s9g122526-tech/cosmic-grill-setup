@@ -43,6 +43,22 @@ import { redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/admin/payments")({
   ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Payment Records — Kennedy Moon Grill" },
+      {
+        name: "description",
+        content: "Review, verify and manage Kennedy Moon Grill payment records.",
+      },
+      { property: "og:title", content: "Payment Records — Kennedy Moon Grill" },
+      {
+        property: "og:description",
+        content: "Review, verify and manage Kennedy Moon Grill payment records.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
   component: Payments,
 });
 
@@ -79,14 +95,14 @@ function Payments() {
       </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Verified revenue" value={money(stats.revenue)} tone="gold" icon={<Wallet className="h-4 w-4" />} />
-        <StatCard label="Awaiting verification" value={stats.unverified} tone={stats.unverified ? "bad" : "good"} icon={<ShieldCheck className="h-4 w-4" />} />
-        <StatCard label="Uncollected value" value={money(stats.pending)} hint="Mostly cash on delivery" />
-        <StatCard label="Average ticket" value={money(stats.avgOrder)} />
+        <StatCard className="payment-cut-card payment-cut-card--stat" label="Verified revenue" value={money(stats.revenue)} tone="gold" icon={<Wallet className="h-4 w-4" />} />
+        <StatCard className="payment-cut-card payment-cut-card--stat" label="Awaiting verification" value={stats.unverified} tone={stats.unverified ? "bad" : "good"} icon={<ShieldCheck className="h-4 w-4" />} />
+        <StatCard className="payment-cut-card payment-cut-card--stat" label="Uncollected value" value={money(stats.pending)} hint="Mostly cash on delivery" />
+        <StatCard className="payment-cut-card payment-cut-card--stat" label="Average ticket" value={money(stats.avgOrder)} />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-3">
-        <Panel title="Collected by method" className="xl:col-span-2">
+        <Panel title="Collected by method" className="payment-cut-card xl:col-span-2">
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={series} margin={{ left: -10, right: 8 }}>
@@ -99,7 +115,7 @@ function Payments() {
             </ResponsiveContainer>
           </div>
         </Panel>
-        <Panel title="Method share" subtitle="Orders per payment method">
+        <Panel className="payment-cut-card" title="Method share" subtitle="Orders per payment method">
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
@@ -125,6 +141,7 @@ function Payments() {
       </div>
 
       <Panel
+        className="payment-cut-card payment-cut-card--ledger"
         title="Ledger"
         subtitle="Verify, refund or flag any transaction"
         action={
