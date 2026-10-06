@@ -55,10 +55,7 @@ export function ActiveOrderTab() {
       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
       className="group fixed right-0 top-[42%] z-[150] -translate-y-1/2"
     >
-      <motion.div
-        animate={reduceMotion ? undefined : { x: [0, -3, 0] }}
-        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-      >
+      <div>
         <Link
           to="/track/$code"
           params={{ code: order.order_code }}
@@ -90,7 +87,7 @@ export function ActiveOrderTab() {
             </span>
           </span>
         </Link>
-      </motion.div>
+      </div>
     </motion.div>
   );
 }
