@@ -17,3 +17,4 @@ Checkout presentation styles are scoped under checkout-prefixed classes; payment
 
 Admin dot-grid decoration is scoped to `.admin-caddy-shell` on the shared console wrapper; rider and storefront backgrounds remain unchanged.
 Dish motion uses position-only layout transitions and reduced-motion guards to prevent content scaling and hidden cards.
+Active customer orders surface through one shared edge-mounted tracking tab outside staff consoles, so tracking remains discoverable without duplicating order state.

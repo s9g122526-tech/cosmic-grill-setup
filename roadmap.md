@@ -29,3 +29,7 @@
 - [x] Place OTP entry beside its phone field, use six animated code cells, and lock verified numbers clearly.
 - [x] Add obvious Home, Sign in, and Create account navigation across access screens.
 - [x] Verify menu filtering, Takiii, cart verification states, payment selection, and access navigation on desktop and phone.
+
+# Active order discovery
+- [x] Add a persistent side tab for active orders with status, ETA, and one-click live tracking.
+- [ ] Verify the tab with a real active customer order. Blocked: no customer order session is available in the local preview.

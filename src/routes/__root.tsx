@@ -19,6 +19,7 @@ import { CartDock } from "@/components/kennedy/CartDock";
 import { SoundProvider } from "@/components/kennedy/SoundProvider";
 import { SiteLoader } from "@/components/kennedy/SiteLoader";
 import { ConnectionBanner } from "@/components/ConnectionBanner";
+import { ActiveOrderTab } from "@/components/kennedy/ActiveOrderTab";
 
 
 function NotFoundComponent() {
@@ -190,6 +191,7 @@ function RootComponent() {
         <>
           <CursorRobot />
           <CartDock />
+           <ActiveOrderTab />
           <SoundProvider />
         </>
       ) : null}
