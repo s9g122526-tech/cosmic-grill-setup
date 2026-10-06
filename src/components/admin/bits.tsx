@@ -207,7 +207,6 @@ export function StatCard({
   tone = "plain",
   trend,
   series,
-  className,
 }: {
   label: string;
   value: string | number;
@@ -216,7 +215,6 @@ export function StatCard({
   tone?: keyof typeof TONES;
   trend?: number;
   series?: number[];
-  className?: string;
 }) {
   const t = TONES[tone];
   return (
@@ -224,7 +222,6 @@ export function StatCard({
       className={cn(
         "panel-lux lux-rise card-3d relative overflow-hidden p-4 sm:p-5",
         t.ring,
-        className,
       )}
       style={{ backgroundImage: `radial-gradient(420px 140px at 100% 0%, ${t.glow}, transparent 70%)` }}
     >

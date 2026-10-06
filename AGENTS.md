@@ -16,5 +16,4 @@ Phone verification uses the shared six-cell OTP component across checkout and ph
 Checkout presentation styles are scoped under checkout-prefixed classes; payment selection reuses existing payment data and verification locks remain visible after session changes so server contracts stay unchanged.
 
 Admin dot-grid decoration is scoped to `.admin-caddy-shell` on the shared console wrapper; rider and storefront backgrounds remain unchanged.
-Payment card presentation is scoped to `.admin-payments .payment-cut-card` so the cut-corner treatment never changes other console cards.
 Dish motion uses position-only layout transitions and reduced-motion guards to prevent content scaling and hidden cards.

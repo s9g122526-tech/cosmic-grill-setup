@@ -1,5 +1,4 @@
 # Menu reference update
-- [x] Restyle admin payment cards with the supplied rounded cut-corner inspiration, restrained transparency, and visible dot-grid backdrop.
 - [x] Add an admin-only animated dot-grid background and refine dish motion with reduced-motion guards; build reports OK.
 - [ ] Verify the authenticated admin background and dish interactions visually. Blocked: external staff session unavailable; live admin redirects to sign-in.
 - [x] Refresh cart layout, reference-style payment selector, compact OTP and verified phone lock. Verified real menu-to-cart navigation and all payment choices; mocked OTP send/verify tests pass. No real OTP or order was sent.
