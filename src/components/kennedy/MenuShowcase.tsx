@@ -8,11 +8,11 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { DISHES, fetchDishes, BACKEND_MENU, type Dish } from "@/lib/menu";
 import { addToCart } from "@/lib/cart";
-import grillCutout from "@/assets/menu-grill-cutout.png";
-import karahiCutout from "@/assets/menu-karahi-cutout.png";
-import biryaniCutout from "@/assets/menu-biryani-cutout.png";
-import naanCutout from "@/assets/menu-naan-cutout.png";
-import dessertCutout from "@/assets/menu-dessert-cutout.png";
+import grillCutout from "@/assets/menu-grill-cutout.webp";
+import karahiCutout from "@/assets/menu-karahi-cutout.webp";
+import biryaniCutout from "@/assets/menu-biryani-cutout.webp";
+import naanCutout from "@/assets/menu-naan-cutout.webp";
+import dessertCutout from "@/assets/menu-dessert-cutout.webp";
 
 const ALL = "all";
 
