@@ -6,6 +6,7 @@ import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { getLocalUser, useSession } from "@/hooks/use-session";
+import { WalletPayFlow, type WalletStep } from "@/components/kennedy/WalletPayFlow";
 import {
   clearSelected,
   removeFromCart,
@@ -94,6 +95,9 @@ function CartPage() {
   const [touched, setTouched] = useState<Partial<Record<FieldKey, boolean>>>({});
   const [orderType, setOrderType] = useState<OrderType>("delivery");
   const [payment, setPayment] = useState<PaymentMethod>("jazzcash");
+  const [walletStep, setWalletStep] = useState<WalletStep>("ready");
+  // Proof file is held for the upcoming backend attachment.
+  const [, setPaymentProof] = useState<File | null>(null);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
   const [locating, setLocating] = useState(false);
   const [placing, setPlacing] = useState(false);
@@ -227,7 +231,9 @@ function CartPage() {
             ? "Pick a branch to order from"
             : activeBranch && !isOpenNow(activeBranch)
               ? `${activeBranch.name} is closed right now`
-              : null;
+              : payment !== "cod" && walletStep !== "done"
+                ? "Complete payment and upload your receipt"
+                : null;
 
   const checkoutStep = !isSignedIn && !otpVerified ? 2 : 3;
   const paymentIcon = (method: PaymentMethod) => {
@@ -799,11 +805,16 @@ function CartPage() {
                 <div className="min-w-0"><span className="font-display text-sm font-extrabold text-charcoal">Your checkout caddy</span><p className="font-body text-xs text-charcoal/65" role="status">{placing ? "Sending your order to the kitchen…" : otpVerified || isSignedIn ? "Phone ready. Choose your payment." : "Your order is here. Let’s verify your phone."}</p></div>
               </div>
               <h2 className="mt-6 font-display text-lg font-extrabold uppercase text-charcoal">Payment</h2>
+              {!(otpVerified || isSignedIn) ? (
+                <p className="mt-3 flex items-center gap-2 rounded-2xl bg-charcoal/5 p-4 font-body text-xs text-charcoal/65">
+                  <LockKeyhole className="h-4 w-4 shrink-0 text-flame" aria-hidden="true" /> Verify your phone number to unlock payment options.
+                </p>
+              ) : (<>
               <div className="checkout-payments" role="group" aria-label="Payment method">
                 <span className="checkout-payments__slider" aria-hidden="true" />
                 {PAYMENTS.map((p) => {
                   const PaymentIcon = paymentIcon(p.id);
-                  return <Button variant="ghost" key={p.id} type="button" aria-pressed={payment === p.id} onClick={() => setPayment(p.id)} className="checkout-payments__option">
+                  return <Button variant="ghost" key={p.id} type="button" aria-pressed={payment === p.id} onClick={() => { setPayment(p.id); setWalletStep("ready"); setPaymentProof(null); }} className="checkout-payments__option">
                     <PaymentIcon aria-hidden="true" />
                     <span>{p.id === "cod" ? "Cash" : p.label}</span>
                   </Button>;
@@ -813,6 +824,10 @@ function CartPage() {
                 <Check className="h-4 w-4 shrink-0 text-flame" aria-hidden="true" />
                 <span>{PAYMENTS.find((p) => p.id === payment)?.note}{fee > 0 ? ` · +Rs ${fee} fee` : ""}</span>
               </div>
+              {payment !== "cod" && (
+                <WalletPayFlow key={payment} method={payment} amount={total} step={walletStep} onStep={setWalletStep} onProof={setPaymentProof} />
+              )}
+              </>)}
 
               {/* SLICE 2.5 — discount code */}
               <div className="mt-5">
